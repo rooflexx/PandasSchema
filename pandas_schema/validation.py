@@ -417,3 +417,37 @@ class DateFormatValidation(_SeriesValidation):
 
     def validate(self, series: pd.Series) -> pd.Series:
         return series.astype(str).apply(self.valid_date)
+
+
+class NegativeNumberValidation(_SeriesValidation):
+    """
+    Checks that each element in the list is positive
+    """
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    @property
+    def default_message(self):
+        return "Given number doesn't fill the condition. Number is negative."
+
+    def validate(self, series: pd.Series) -> pd.Series:
+        series = pd.to_numeric(series, errors="coerce")
+        return series > 0
+
+
+class PositiveNumberValidation(_SeriesValidation):
+    """
+    Checks that each element in the list is negative
+    """
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    @property
+    def default_message(self) -> str:
+        return "Given number doesn't fill the condition. Number is positive."
+
+    def validate(self, series: pd.Series) -> pd.Series:
+        series = pd.to_numeric(series, errors="coerce")
+        return series < 0
